@@ -1,0 +1,20 @@
+<html>
+    <body>
+        <h1>Bookstore Inventory Manager</h1>
+        <%- include('genreSelector') %>
+        <table style="border: solid 1px black">
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            <% books.forEach((book) => { %>
+                <tr>
+                    <td style="border: solid 1px black; padding: 10px;"><%= book.name %></td>
+                    <td style="border: solid 1px black; padding: 10px;"><%= book.price %></td>
+                    <td style="border: solid 1px black; padding: 10px;"><%= book.quantity %></td>
+                </tr>
+            <% }); %>
+        </table>
+    </body>
+</html>

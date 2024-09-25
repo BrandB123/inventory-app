@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <form action="/" method="post">
+            <label for="genre">Genre:</label>
+            <select name="genre" id="genre" value="--Genre--">
+                <option value="--Genre--" disabled selected>--Genre--</option>
+                <option value="All">All</option>
+                <% genres.forEach((genre) => { %>
+                    <option value="<%= genre %>"><%= genre %></option>
+                <% }); %>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+        <script>
+            const selectedGenre = document.querySelector("#genre");
+            
+        </script>
+    </body>
+</html>
