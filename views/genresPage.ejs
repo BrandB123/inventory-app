@@ -5,14 +5,15 @@
         <button class="addGenre">Add New Genre</button>
         <form action="/genres" method="post" class="addGenreForm" 
             style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20%; background-color: white; border: solid 1px black; border-radius: 10px;">
-            <label for="genre-Name">Name:</label>
-            <input type="text">
+            <label for="genreName">Name:</label>
+            <input id="genreName" name="genreName" type="text">
             <button type="submit" class="addGenreFormSubmit">Add</button>
             <button type="button" class="addGenreFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
         </form>
 
         <table>
             <% genres.forEach((genre) => { %>
+                <% if (genre !== "None") {%>
                 <tr>
                     <td style="border: solid 1px black; padding: 10px;"><%= genre %></td>
                     <td>    
@@ -22,20 +23,23 @@
                         <button class="delete-Btn" data-genre="<%- genre %>" style="background-color: red; border-radius: 5px;">Delete</button>
                     </td>
                 </tr>
+                <% } %>
             <% }); %>
         </table>
 
         <form action="/genres" method="post" class="editGenreForm" 
             style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20%; background-color: white; border: solid 1px black; border-radius: 10px;">
             <label for="new-genre-name">New Name:</label>
-            <input id="new-genre-name" name="new-genre-name" type="text">
-            <button type="submit" class="editGenreFormSubmit">Add</button>
+            <input id="new-genre-name" name="newGenreName" type="text">
+            <input id="old-genre-name" name="oldGenreName" style="visibility: hidden;">
+            <button type="submit" class="editGenreFormSubmit">Update</button>
             <button type="button" class="editGenreFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
         </form>
 
         <form action="/genres" method="post" class="deleteGenreForm" 
             style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20% 5%; background-color: white; border: solid 1px black; border-radius: 10px;">
             <label for="delete-warning">Are you sure you would like to delete this genre? </label>
+            <input id="delete-warning" name="deleteInput" style="visibility: hidden;">
             <button type="submit" class="deleteGenreFormSubmit">Delete</button>
             <button type="button" class="deleteGenreFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
         </form>
@@ -59,11 +63,14 @@
             const deleteGenreFormClose = document.querySelector(".deleteGenreFormClose");
             const editGenreFormSubmit = document.querySelector(".editGenreFormSubmit");
             const deleteGenreFormSubmit = document.querySelector(".deleteGenreFormSubmit");
+            const editInput = document.querySelector("#old-genre-name")
+            const deleteInput = document.querySelector("#delete-warning");
 
             editButtons.forEach(button => {
                 button.addEventListener('click', (event) => {
                 const genre = event.target.dataset.genre;
                 console.log('Edit clicked for genre:', genre);
+                editInput.value = genre;
                 editGenreForm.style.visibility = "visible"
                 });
             });
@@ -71,6 +78,7 @@
                 button.addEventListener('click', (event) => {
                 const genre = event.target.dataset.genre;
                 console.log('Delete clicked for genre:', genre);
+                deleteInput.value = genre;
                 deleteGenreForm.style.visibility = "visible"
                 });
             });
@@ -81,17 +89,6 @@
             deleteGenreFormClose.addEventListener("click", () => deleteGenreForm.style.visibility = "hidden")
             deleteGenreFormSubmit.addEventListener("click", () => deleteGenreForm.style.visibility = "hidden")
 
-
-
         </script>
     </body>
 </html>
-
-
-<!-- 
-import getGenres from controllers
-call getGenres to create array variable
-
-render view with list of genres with radio buttons next to them
-
--->
