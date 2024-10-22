@@ -4,6 +4,26 @@
         <%- include('navigationBar') %>
         <%- include('genreSelector') %>
 
+        <button class="addBook" style="margin-left: 30px;">Add New Book</button>
+        <form action="/" method="post" class="addBookForm" 
+        style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20%; background-color: white; border: solid 1px black; border-radius: 10px;">
+            <label for="bookName">Title:</label>
+            <input id="bookName" name="bookName" type="text">
+            <label for="bookGenre">Genre:</label>
+            <select name="bookGenre" id="bookGenre" value="--Genre--">
+                <option value="--Genre--" disabled selected>--Genre--</option>
+                <% genres.forEach((genre) => { %>
+                    <option value="<%= genre %>"><%= genre %></option>
+                <% }); %>
+            </select>
+            <label for="bookPrice">Price:</label>
+            <input id="bookPrice" name="bookPrice" type="text">
+            <label for="bookQuantity">Quantity:</label>
+            <input id="bookQuantity" name="bookQuantity" type="text">
+            <button type="submit" class="addBookFormSubmit">Add</button>
+            <button type="button" class="addBookFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
+        </form>
+
         <table>
             <tr>
                 <th style="border: solid 1px black; padding: 10px;">Title</th>
@@ -18,13 +38,114 @@
                     <td style="border: solid 1px black; padding: 10px;"><%= "$" + book.price%></td>
                     <td style="border: solid 1px black; padding: 10px;"><%= book.quantity %></td>
                     <td>
-                        <button style="background-color: #2062e5; color: white; border-radius: 5px;">Edit</button>
+                        <button class="book-edit-Btn" data-title="<%- book.name %>"
+                                style="background-color: #2062e5; color: white; border-radius: 5px;">
+                            Edit
+                        </button>
                     </td>
                     <td>
-                        <button style="background-color: red; border-radius: 5px;">Delete</button>
+                        <button class="book-delete-Btn" data-title="<%- book.name %>"
+                                style="background-color: red; border-radius: 5px;">
+                            Delete
+                        </button>
                     </td>
                 </tr>
             <% }); %>
         </table>
+
+        <form action="/" method="post" class="editBookForm" 
+            style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20%; background-color: white; border: solid 1px black; border-radius: 10px;">
+
+            <input id="old-book-name" name="oldBookName" style="visibility: hidden;">
+            <label for="book-field-selection">Select the field you wish to update:</label>
+            <select id="book-field-selection" name="bookFieldSelection" name value="--Field--" style="display: block; margin-bottom: 10px;">
+                <option value="--Field--" disabled selected>--Field--</option>
+                <option value="Title">Title</option>
+                <option value="Price">Price</option>
+                <option value="Quantity">Quantity</option>
+            </select>
+            <label for="book-update">What should this field be updated to?</label>
+            <input type="text" id="book-update" name="bookUpdate" style="margin-bottom: 10px;">
+
+
+            <button type="submit" class="editBookFormSubmit">Update</button>
+            <button type="button" class="editBookFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
+        </form>
+
+
+
+
+
+        <!-- <form action="/" method="post" class="editBookForm" 
+            style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20%; background-color: white; border: solid 1px black; border-radius: 10px;">
+            <label for="new-book-name">Title:</label>
+            <input id="new-book-name" name="newBookName" type="text">
+            <input id="old-book-name" name="oldBookName" style="visibility: hidden;">
+            <label for="new-book-genre">Genre:</label>
+            <select name="newBookGenre" id="new-book-genre" value="--Genre--">
+                <option value="--Genre--" disabled selected>--Genre--</option> -->
+                <!-- <% genres.forEach((genre) => { %>
+                    <option value="<%= genre %>"><%= genre %></option>
+                <% }); %> -->
+            <!-- </select>
+            <label for="new-book-price">Price:</label>
+            <input id="new-book-price" name="newBookPrice" type="text">
+            <label for="new-book-quantity">Quantity:</label>
+            <input id="new-book-quantity" name="newBookQuantity" type="text">
+            <button type="submit" class="editBookFormSubmit">Update</button>
+            <button type="button" class="editBookFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
+        </form> -->
+
+        <form action="/" method="post" class="deleteBookForm" 
+            style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20% 5%; background-color: white; border: solid 1px black; border-radius: 10px;">
+            <label for="delete-book-warning">Are you sure you would like to delete this genre? </label>
+            <input id="delete-book-warning" name="deleteBookInput" style="visibility: hidden;">
+            <button type="submit" class="deleteBookFormSubmit">Delete</button>
+            <button type="button" class="deleteBookFormClose" style="position: absolute; top: 2%; right: 2%;">x</button>
+        </form>
+
+        <script>
+            const addBook = document.querySelector(".addBook");
+            const addBookForm = document.querySelector(".addBookForm");
+            const addBookFormSubmit = document.querySelector(".addBookFormSubmit");
+            const addBookFormClose = document.querySelector(".addBookFormClose");
+            addBook.addEventListener("click", () => addBookForm.style.visibility = "visible")
+            addBookFormClose.addEventListener("click", () => addBookForm.style.visibility = "hidden")
+            addBookFormSubmit.addEventListener("click", () => addBookForm.style.visibility = "hidden")
+
+            const editButtons = document.querySelectorAll(".book-edit-Btn");
+            const deleteButtons = document.querySelectorAll(".book-delete-Btn");
+            const editBookForm = document.querySelector(".editBookForm");
+            const deleteBookForm = document.querySelector(".deleteBookForm");
+            const editBookFormClose = document.querySelector(".editBookFormClose");
+            const deleteBookFormClose = document.querySelector(".deleteBookFormClose");
+            const editBookFormSubmit = document.querySelector(".editBookFormSubmit");
+            const deleteBookFormSubmit = document.querySelector(".deleteBookFormSubmit");
+            const editInput = document.querySelector("#old-book-name")
+            const deleteInput = document.querySelector("#delete-book-warning");
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                const title = event.target.dataset.title;
+                console.log('Edit clicked for Book:', title);
+                editInput.value = title;
+                editBookForm.style.visibility = "visible"
+                });
+            });
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                const title = event.target.dataset.title;
+                console.log('Delete clicked for book:', title);
+                deleteInput.value = title;
+                deleteBookForm.style.visibility = "visible"
+                });
+            });
+
+            editBookFormClose.addEventListener("click", () => editBookForm.style.visibility = "hidden")
+            editBookFormSubmit.addEventListener("click", () => editBookForm.style.visibility = "hidden")
+
+            deleteBookFormClose.addEventListener("click", () => deleteBookForm.style.visibility = "hidden")
+            deleteBookFormSubmit.addEventListener("click", () => deleteBookForm.style.visibility = "hidden")
+        </script>
     </body>
 </html>

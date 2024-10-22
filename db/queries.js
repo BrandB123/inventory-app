@@ -72,4 +72,52 @@ async function updateGenre(oldGenre, newGenre){
     }
 }
 
-module.exports = { getDBGenres, getDBBooks, addGenre, removeGenre, updateGenre }
+async function addBook(title, genre, price, quantity){
+    try {
+        const result = await pool.query(`
+            SELECT id FROM genres
+            WHERE name = $1`,
+            [genre]
+        );
+        const genre_id = result.rows[0].id
+        
+        await pool.query(
+            `INSERT INTO books (name, genre_id, price, quantity)
+            VALUES ($1, $2, $3, $4)`, [title, genre_id, price, quantity]
+        );
+        console.log("Book Added to Database")
+    } catch (error){
+        console.error('Error Adding Book: ', error);
+    }
+}
+
+async function removeBook(book){
+    try {
+        await pool.query(
+            `DELETE FROM books
+            WHERE name = ($1)`, [book]
+        );
+        console.log("Book Removed from Database")
+
+    } catch (error){
+        console.error('Error Removing Book: ', error);
+    }
+}
+
+async function updatebook(column, newData, bookName){
+    try{
+        if (column === "Title"){column = "name"}
+        await pool.query(
+            `UPDATE books
+            SET ${column} = $1
+            WHERE name = $2`, 
+            [newData, bookName]
+        );
+        console.log("Book Updatedd in Database")
+
+    } catch (error){
+        console.error('Error Updating Book: ', error);
+    }
+}
+
+module.exports = { getDBGenres, getDBBooks, addGenre, removeGenre, updateGenre, addBook, removeBook, updatebook}
