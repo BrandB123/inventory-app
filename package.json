@@ -7,6 +7,6 @@
   },
   "scripts": {
     "server": "node --watch app.js",
-    "populatedb": "node db/populatedb.js"
+    "populatedb": "node db/populateDB.js"
   }
 }
